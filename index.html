@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+ <style>
+  #plansza_animacji { background-color: black;
+}
+</style>
+</head>
+
+<body>
+<canvas id="plansza_animacji" width="1350px" height="1000px">
+</canvas>
+
+<script>
+ let plansza, rysowanie;
+ let liczba_gwiazd, i;
+ let gwiazdy_x=[], gwiazdy_y=[];
+ let gwiazdy_predkosc_x=[], gwiazdy_predkosc_y=[];
+
+ plansza = document.getElementById("plansza_animacji");
+ rysowanie = plansza.getContext("2d");
+
+ liczba_gwiazd = 900;
+for (i=0; i<liczba_gwiazd; ++i){
+ gwiazdy_x[i] = Math.random() * plansza.width;
+ gwiazdy_y[i] = Math.random() * plansza.height;
+ gwiazdy_predkosc_x[i] = 4*Math.random() -2;
+ gwiazdy_predkosc_y[i] = 4*Math.random() -2;
+}
+
+function Animacja() {
+rysowanie.clearRect(0, 0, plansza.width, plansza.height);
+for (i=0; i<liczba_gwiazd; ++i) {
+rysowanie.beginPath();
+rysowanie.fillStyle = "yellow";
+rysowanie.arc(gwiazdy_x[i], gwiazdy_y[i], 5, 0, 2*Math.PI);
+rysowanie.fill();
+rysowanie.closePath();
+gwiazdy_x[i] = gwiazdy_x[i] + gwiazdy_predkosc_x[i];
+gwiazdy_y[i] = gwiazdy_y[i] + gwiazdy_predkosc_y[i];
+if (gwiazdy_x[i] <= 0)
+gwiazdy_predkosc_x[i] = -1*gwiazdy_predkosc_x[i];
+if (gwiazdy_y[i] <= 0)
+gwiazdy_predkosc_y[i] = -1*gwiazdy_predkosc_y[i];
+if (gwiazdy_x[1] >= plansza.width)
+gwiazdy_predkosc_x[i] = -1*gwiazdy_predkosc_x[i];
+if (gwiazdy_y[1] >= plansza.height)
+gwiazdy_predkosc_y[i] = -1*gwiazdy_predkosc_y[i];
+
+for (j=i+1; j<liczba_gwiazd; ++j) {
+odleglosc_x = gwiazdy_x[i] - gwiazdy_x[j];
+odleglosc_y = gwiazdy_y[i] - gwiazdy_y[j];
+odleglosc = Math.sqrt(odleglosc_x*odleglosc_x + odleglosc_y* odleglosc_y);
+if (odleglosc <= 80) {
+rysowanie.beginPath();
+//rysowanie.strokeStyle = "yellow";
+//rysowanie.strokeStyle = "rgb(255,255,0)";
+rysowanie.strokeStyle = "rgb("+255+","+255+","+odleglosc*1.5+")";
+rysowanie.lineWidth = 80/(1+odleglosc);
+rysowanie.moveTo(gwiazdy_x[i], gwiazdy_y[i]);
+rysowanie.lineTo(gwiazdy_x[j], gwiazdy_y[j]);
+rysowanie.stroke();
+rysowanie.closePath();
+
+}
+}
+}
+}
+
+setInterval(Animacja, 10);
+</script>
+</body>
+
+</html>
